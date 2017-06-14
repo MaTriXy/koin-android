@@ -2,9 +2,9 @@
 
 KOIN is a simple dependency injection framework that use Kotlin and its functional power to get it done!  No Proxy, No code generation, No introspection. Just functional Kotlin and DSL ;)
 
-Koin-Android is based on [Koin](https://github.com/Ekito/koin/), the main library of Koin framework.
+Koin-Android is based on [Koin framework](https://github.com/Ekito/koin/).
 
-**Insert Koin to inject your app :)**
+**Insert Koin and start injecting :)**
 
 ## Gradle Setup
 
@@ -50,9 +50,15 @@ AndroidModule also gives you the possibility to retrieve your ApplicationContext
 
 ### Setup your Android Application
 
-To start your Koin module, you must build it: `Koin().init(*applicationInstance*).build(MyModule::class)`. This will return a context on which you will get your components isntances.
+To start your module, you must build it this way: 
 
-On Android, we can make it on our Application class, but it will be tricky to retrieve your Koin context from Android. Koin proposes a [KoinApplication](https://github.com/Ekito/koin-android/blob/master/koin-android/src/main/kotlin/org/koin/android/KoinApplication.kt) and a [KoinMultiDexApplication](https://github.com/Ekito/koin-android/blob/master/koin-android/src/main/kotlin/org/koin/android/KoinMultiDexApplication.kt) to help easily setup your context & get it from everywhere (thanks to [Kotlin extensions](https://github.com/Ekito/koin-android/blob/master/koin-android/src/main/kotlin/android/app/AndroidExt.kt)):
+```Kotlin
+val myContext = Koin().init(*applicationInstance*).build(MyModule::class)
+```
+
+This will return a context on which you will get your components isntances. Don't forget to use the `init()` step in this build, else you won't be able to load your AndroidModule. On Android, the general way is to build it in our Application class, but it will be tricky to retrieve your Koin context from Android. 
+
+Koin proposes a [KoinApplication](https://github.com/Ekito/koin-android/blob/master/koin-android/src/main/kotlin/org/koin/android/KoinApplication.kt) and a [KoinMultiDexApplication](https://github.com/Ekito/koin-android/blob/master/koin-android/src/main/kotlin/org/koin/android/KoinMultiDexApplication.kt) to help easily setup your context & get it from everywhere (thanks to [Kotlin extensions](https://github.com/Ekito/koin-android/blob/master/koin-android/src/main/kotlin/android/app/AndroidExt.kt)):
 
 ```Kotlin
 class MainApplication : KoinApplication(MyModule::class) {
@@ -65,10 +71,16 @@ class MainApplication : KoinApplication(MyModule::class) {
 
 ```
 
-By using these KoinApplication class, you will be able to use the Koin Android extensions below.
+By using these KoinApplication class, your module will be build at `onCreate()` phase and you will be able to use the Koin Android extensions.
 
 
 ### Just get Koin
+
+Once you have your Koin context, simply get your component like this:
+
+```Kotlin
+val weatherService = getKoin().get<WeatherService>()
+```
 
 You can get the Koin context from anywhere (Application, Activity, Fragment), by using the `getKoin()` method extension. Below a way of lazy injection dependency in an Activity:
 
@@ -85,5 +97,5 @@ class MainActivity : AppCompatActivity() {
 
 ### More features
 
-Check the [Koin core project](https://github.com/Ekito/koin/) for the advanced features.
+Check the [Koin core project](https://github.com/Ekito/koin/) for the advanced features 'import, factory, stacking, @Inject ...).
 
